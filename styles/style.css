@@ -1,0 +1,16 @@
+html {
+  font-size: 10px;
+  /* Replace PLACEHOLDER with the font-family property value you got from Google Fonts */
+  font-family: "Big Shoulders", sans-serif;
+}
+
+h1{
+    color:midnightblue;
+    font-size: 60px;
+    text-align: center;
+}
+
+p{
+    font-size: 30px;
+    text-align: center;
+}

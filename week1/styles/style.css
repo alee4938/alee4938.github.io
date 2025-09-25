@@ -1,0 +1,24 @@
+.eater-regular-header {
+    color:red;
+    font-family: "Eater", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.original-surfer-regular {
+  font-family: "Original Surfer", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+h3{
+    color:white;
+}
+
+p{
+    color:white;
+}
+
+dd{
+    color:white;
+}
