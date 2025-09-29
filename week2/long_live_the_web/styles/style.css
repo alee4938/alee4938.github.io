@@ -1,0 +1,63 @@
+.syne-wideish {
+  font-family: "Syne", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: bold;
+}
+
+.roboto-reg {
+  font-family: "Roboto", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
+}
+
+.container {
+    width: 90%;
+    max-width: 1000px;
+    margin: 40px auto;
+    text-align: center;
+}
+
+h1 {
+    position: relative;
+    color: black;
+    margin: 20px auto;
+    padding: 15px 40px;
+    font-size: 60px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+h1::before {
+    content: "";
+    position: absolute;
+    width: 1000%;
+    height: 1000%;
+    top: -450%;
+    left: -450%;
+    z-index: -1;
+    background-image: conic-gradient(from 0deg,#2F46FA,#55FC77,#FFFE13,#FB41DA,#7E2DE8,#2F46FA);
+    animation: spin 10s linear infinite;
+}
+
+/* Rotation animation */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.reflection {
+    text-align: left;
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 50px;
+}
+
