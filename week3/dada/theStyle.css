@@ -1,0 +1,47 @@
+.dada {
+    font-family: "danh-da", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+}
+
+body {
+    background-color: rgb(134, 154, 191);
+    margin: 0;
+}
+
+main{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    height: 100vh;
+}
+
+div {
+    display: flex;
+    position: absolute;
+    transform: scaleY(1.5);
+    color: black;
+    z-index: 2;
+    flex-direction: row;
+    align-items: start;
+    gap: 1vw;
+    font-size: 350;
+    font-weight: 900;
+    line-height: 0.1;
+}
+#theBackward{
+    position: absolute;
+    transform: scaleX(1.5) rotate(90deg);
+    color: rgb(255,255,255);
+    z-index: 1;
+}
+
+
+
+p {
+    line-height: 0.1;
+    position:absolute;
+    /*margin-top: 0;
+    margin-bottom: 0;*/
+}

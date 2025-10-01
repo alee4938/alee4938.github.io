@@ -1,0 +1,44 @@
+.monofett-regular {
+  font-family: "Monofett", monospace;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.geo-regular {
+  font-family: "Geo", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.geo-regular-italic {
+  font-family: "Geo", sans-serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 400px;
+    height: 90px;
+    border-radius: 25px;
+    color: #851ae9;
+    font-weight: bold;
+    font-size: 50px;
+    text-decoration: none;
+    background-color: rgb(27, 174, 27);
+    margin: 10px;
+}
+
+main{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+h1 {
+    color:#851ae9;
+    font-size: 100px;
+    text-align: center;
+}
