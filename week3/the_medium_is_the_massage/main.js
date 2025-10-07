@@ -2,6 +2,23 @@ const site_wide_cursor = document.querySelector('.custom-cursor.site-wide');
 const insideText = document.querySelector('.bottom-text');
 const hidden_area = document.querySelector('.hidden-area');
 
+site_wide_cursor.style.display = 'none';
+hidden_area.style.display = 'none';
+insideText.style.webkitMaskPosition = `-1000px -1000px`;
+insideText.style.maskPosition = `-1000px -1000px`;
+let hasMoved = false;
+
+document.addEventListener('mousemove', (evt) => {
+    if (!hasMoved) {
+        // Show spotlight on first movement
+        site_wide_cursor.style.display = 'block';
+        hidden_area.style.display = 'block';
+        hasMoved = true;
+    }
+    TrackCursor(evt);
+});
+
+
 document.addEventListener('mouseenter', () => {
     site_wide_cursor.style.display = 'block';
     hidden_area.style.display = 'block';
@@ -10,9 +27,9 @@ document.addEventListener('mouseenter', () => {
 document.addEventListener('mouseleave', () => {
     site_wide_cursor.style.display = 'none';
     hidden_area.style.display = 'none';
+    insideText.style.webkitMaskPosition = `-1000px -1000px`;
+    insideText.style.maskPosition = `-1000px -1000px`;
 });
-
-document.addEventListener('mousemove', TrackCursor);
 
 function TrackCursor(evt) {
     const w = site_wide_cursor.clientWidth;

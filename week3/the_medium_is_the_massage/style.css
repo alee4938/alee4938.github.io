@@ -19,7 +19,7 @@ html, body {
 .site-wide{
     width: 30.6vw;
     height: 30.6vw;
-    border: 8px solid #fff7e8;
+    border: 8px solid #fff0d4;
     border-radius: 50%;
     z-index: 2;
 }
@@ -32,7 +32,7 @@ html, body {
     width: 5px;
     height: 5px;
     border-radius: 50%;
-    background-color: #fff7e8;
+    background-color: #fff0d4;
     z-index: 2;
 }
 
@@ -114,6 +114,6 @@ p{
 
 a{
     text-decoration: none;
-    color: #496F69;
+    color: #496D63;
     font-weight: 600;
 }
