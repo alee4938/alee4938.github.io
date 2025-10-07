@@ -1,0 +1,113 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    cursor: none;
+    overflow: hidden;
+}
+
+.custom-cursor {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+}
+
+.site-wide{
+    width: 30.6vw;
+    height: 30.6vw;
+    border: 8px solid #fff7e8;
+    border-radius: 50%;
+    z-index: 2;
+}
+
+.site-wide .pointer{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: #fff7e8;
+    z-index: 2;
+}
+
+.site-wide .hidden-area{
+    position: absolute;
+    width: 30vw;
+    height: 30vw;
+    background-color: #003936; 
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    mix-blend-mode: destination-out;
+    z-index: 1;
+}
+
+.erica-one-regular {
+  font-family: "Erica One", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.inconsolata-regular {
+  font-family: "Inconsolata", monospace;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 125;
+}
+
+
+.top-text{
+    display: flex;
+    text-align: center;
+    align-content: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 100vw;
+    z-index: 0;
+    position: absolute;
+}
+
+.bottom-text{
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: justify;
+    width: 100vw;
+    position: absolute;
+    -webkit-mask-image: radial-gradient(circle 15vw, black 70%, transparent 100%);
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-image: radial-gradient(circle 15vw, black 70%, transparent 100%);
+    mask-repeat: no-repeat;
+    mask-position: center;
+    top: 15px;
+    z-index: 3;
+}
+
+h1{
+    position: relative;
+    top: -55px;
+    font-size: 22vw;
+    margin: 0;
+    line-height: 0.62;
+    transform: scaleY(0.9);
+}
+
+p{
+    position: relative;
+    font-size: 2.5vw;
+    margin: 0 auto;
+    line-height: 1.37;
+    text-align: justify;
+}
