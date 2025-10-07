@@ -20,15 +20,20 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 400px;
-    height: 90px;
+    text-align: center;
+    width: 500px;
+    height: 120px;
     border-radius: 25px;
-    color: #851ae9;
+    color: #1bae1b;
     font-weight: bold;
     font-size: 50px;
     text-decoration: none;
-    background-color: rgb(27, 174, 27);
+    background-color: #851ae9;
     margin: 10px;
+}
+
+a{
+  text-decoration: none;
 }
 
 main{

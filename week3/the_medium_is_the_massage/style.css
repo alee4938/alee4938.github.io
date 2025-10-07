@@ -111,3 +111,9 @@ p{
     line-height: 1.37;
     text-align: justify;
 }
+
+a{
+    text-decoration: none;
+    color: #496F69;
+    font-weight: 600;
+}
