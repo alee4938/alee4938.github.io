@@ -37,8 +37,9 @@ function TrackCursor(evt) {
     const mouseX = evt.clientX;
     const mouseY = evt.clientY;
     const rect = insideText.getBoundingClientRect();
-    const relativeX = mouseX - w / 2 - 590;
-    const relativeY = mouseY - h / 2 - (rect.height/2) + 250;
+    const vw = document.documentElement.clientWidth;
+    const relativeX = mouseX - w / 2 - (rect.width/2.9);
+    const relativeY = mouseY - h / 2 - (rect.width/8.7);
     site_wide_cursor.style.transform = `translate3d(${evt.clientX - w/2}px, ${evt.clientY - h/2}px, 0)`;
     insideText.style.webkitMaskPosition = `${relativeX}px ${relativeY}px`;
     insideText.style.maskPosition = `${relativeX}px ${relativeY}px`;
