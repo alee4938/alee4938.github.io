@@ -1,0 +1,49 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Original Macintosh Desktop</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body style="-moz-user-select: none;
+-webkit-user-select: none;
+user-select: none;">
+    <div class="menubar">
+        <a href="https://alee4938.github.io/index.html" class="apple-button">
+            <img class="apple-logo" src="https://i.postimg.cc/DwvwW3hw/image-2025-10-28-174558007.png" alt="Apple" />
+        </a>
+        <div class="menus">
+        <span class="menu-item">File</span>
+        <span class="menu-item">Edit</span>
+        <span class="menu-item">View</span>
+        <span class="menu-item">Special</span>
+        </div>
+    </div>
+
+  <div class="desktop">
+    <div class="icon" data-window="system-window" style="right: 40px; top: 80px;">
+      <img src="https://i.postimg.cc/Cxmd7Q11/Adobe-Express-file.png" alt="Floppy Disk">
+      <div class="caption">System 1.0</div>
+    </div>
+
+    <div class="icon" data-window="trash-window" style="right: 70px; bottom: 50px;">
+      <img src="https://i.postimg.cc/ZYdBmHff/Adobe-Express-file-1.png" alt="Trash Can">
+      <div class="caption">Trash</div>
+    </div>
+
+    <!-- Hidden windows -->
+    <div class="window" id="system-window">
+      <div class="window-header">
+        <div class="close-box" onclick="closeWindow(this)"></div>
+        <span>System 1.0</span>
+        </div>
+      <div class="window-body">
+        <p>Welcome to System 1.0!</p>
+      </div>
+    </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

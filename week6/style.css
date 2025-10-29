@@ -1,0 +1,198 @@
+@font-face {
+  font-family: 'SysFont';
+  src: url('../fonts/sysfont.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Geneva';
+  src: url('../fonts/geneva-9.otf') format('opentype');
+}
+
+body {
+  margin: 0;
+  background: repeating-conic-gradient(#ffffff 0 25%, #000000cd 0 50%) 50% / 5px 5px;
+  overflow: hidden;
+  font-family: 'SysFont', sans-serif;
+}
+
+/* Menubar */
+.menubar{
+  height: var(--menu-height);
+  background-color: white;
+  border-bottom: 4px solid #000;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding: 0 8px;
+  box-sizing: border-box;
+  font-family: 'SysFont', monospace;
+  font-size: 35px;
+  letter-spacing: 0.5px;
+}
+
+.apple-logo{
+  width: 30px;
+  height: 30px;
+  image-rendering: pixelated;
+  margin-right: 30px;
+  margin-left: 30px;
+}
+
+.apple-button {
+  display: inline-block;
+  padding: 4px;                  /* area around the logo */
+  background-color: white;       /* default button background */
+  transition: 0.2s ease-in-out;  /* smooth hover */
+}
+
+.apple-button img {
+  width: 30px;
+  height: 30px;
+  image-rendering: pixelated;
+  display: block;
+  transition: filter 0.2s ease-in-out; /* smooth invert effect */
+}
+
+/* Hover effect */
+.apple-button:hover {
+  background-color: black; /* surrounding area turns black */
+}
+
+.apple-button:hover img {
+  filter: invert(1);       /* invert image colors */
+}
+
+.menus{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    color: #000;
+}
+
+.menu-item{
+    padding: 4px 6px;
+    border-radius: 2px;
+}
+
+
+/* Icons */
+.icon {
+    position: absolute;
+    text-align: center;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: fit-content;
+    cursor: pointer;
+}
+
+.icon img {
+    width: 80px;
+    height: auto;
+    image-rendering: pixelated;
+    display: block;
+    z-index: 1;
+}
+
+.caption {
+    position: relative;
+    top: -4px;
+    font-family: 'Geneva', sans-serif;
+    font-size: 35px;
+    background: white;
+    padding: 1px 4px;
+    width: fit-content;
+    text-align: center;
+    color: black;
+}
+
+/* Windows */
+.window {
+  position: absolute;
+  top: 200px;
+  left: 200px;
+  background-color: #ffffff;
+  border: 2px solid #000;
+  box-shadow: 4px 4px 0 #000;
+  width: 300px;
+  display: none;
+  z-index: 10;
+}
+
+.window-header {
+  position: relative;
+  background-color: #ffffff;
+  height: 38px;
+  cursor: grab;
+  font-family: 'SysFont', monospace;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 2px solid #000;
+  box-sizing: border-box;
+}
+
+/* Header text with white background to hide lines */
+.window-header span {
+  position: relative;
+  z-index: 1; /* above the lines */
+  font-size: 22px;
+  text-align: center;
+  background-color: white;
+  padding: 0 6px;
+}
+
+/* Close box */
+.close-box {
+  position: absolute;
+  left: 10px;
+  top: 8px;
+  width: 17px;
+  height: 17px;
+  background-color: #ffffff;
+  border: 2px solid #000; /* inner black border */
+  box-shadow: 0 0 0 2px #fff; /* white border around black border */
+  cursor: pointer;
+  z-index: 2;
+}
+
+.window-body {
+  font-family: 'Geneva';
+  font-size: 16px;
+  margin: 0;          /* remove extra spacing */
+  padding: 0;         /* remove extra spacing */
+  line-height: 0;     /* prevent extra height */
+}
+
+/* Horizontal lines bunched in the middle, leaving space on sides */
+.window-header::before {
+  content: '';
+  position: absolute;
+  top: 8px;       /* space above lines */
+  left: 2px;      /* inset from left */
+  right: 2px;     /* inset from right */
+  height: 20px;   /* lines occupy middle 20px of header */
+  background: repeating-linear-gradient(
+    to bottom,
+    #000 0 1.818181px,
+    #ffffff 1.81818px 3.6363px
+  );
+  z-index: 0;
+}
+
+/* Optional: Remove white space below the image inside body */
+.window-body img {
+  display: block;  /* remove extra inline spacing */
+  width: 100%;
+  filter: brightness(0.9) contrast(2) grayscale(100%);
+  /* Prevent interactions */
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none;   /* Safari */
+    -khtml-user-select: none;    /* Konqueror HTML */
+    -moz-user-select: none;      /* Old versions of Firefox */
+    -ms-user-select: none;       /* Internet Explorer/Edge */
+    user-select: none;           /* Standard syntax */
+    pointer-events: none;        /* Prevents dragging and other pointer events */
+}
