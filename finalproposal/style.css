@@ -1,0 +1,106 @@
+.bbh-hegarty-regular {
+    font-family: "BBH Hegarty", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.montserrat-regular {
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+}
+
+header {
+    position: fixed;
+    z-index: -1;
+    color:rgb(227, 168, 20);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 100px;
+    font-family: "BBH Hegarty", sans-serif;
+}
+
+h1{
+    margin: 20px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+}
+
+
+.item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background: #621c1c;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+
+.item h2 {
+    color:rgb(227, 168, 20);
+    margin: 0 0 0.5rem;
+    font-size: 48px;
+    font-family: "BBH Hegarty", sans-serif;
+    font-weight: 400;
+}
+
+
+.item img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    border-radius: 4px;
+}
+
+
+.item p {
+    color:rgb(227, 168, 20);
+    margin-top: 0.5rem;
+    font-size: 16px;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 600;
+}
+
+.img-container {
+    display: flex;
+    justify-content: center;
+    height: 25vw;
+    width: 40vw;
+}
+
+.item-button {
+    text-decoration: none;
+    color: rgb(227, 168, 20);
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.item-button:hover {
+    background: #7a2626;
+    transform: translateY(-4px);
+}
+
+.arrow {
+    font-size: 200px;
+    font-family: "Montserrat", sans-serif;
+    line-height: 1;
+}
+
+@media (max-width: 700px) {
+.grid {
+grid-template-columns: 1fr;
+}
+}
