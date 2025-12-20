@@ -1,0 +1,41 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Fridge</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="fridgeCanvas"></canvas>
+
+    <!-- Modal for drawing -->
+    <div id="drawingModal">
+        <div id="drawingContainer">
+            <div id="brushToolbar" class="modal-top-toolbar">
+                <div id="brushButtonsContainer">
+                    <button class="tool-btn" data-tool="circle">Circle Brush</button>
+                    <button class="tool-btn" data-tool="translucent">Translucent Brush</button>
+                    <button class="tool-btn" data-tool="eraser">Eraser</button>
+                    <button class="tool-btn" data-tool="undo">Undo</button>
+                    <button class="tool-btn" data-tool="redo">Redo</button>
+                </div>
+                <div id="brushSizeContainer">
+                    <div id="brushSizeSlider">
+                        <div id="brushSizeDot"></div>
+                    </div>
+                </div>
+            </div>
+            <canvas id="drawingCanvas" width="400" height="400"></canvas>
+            <button id="doneButton">✔ Done</button>
+            <div class="modal-toolbar">
+                <div id="colorPalette"></div>
+            </div>
+        </div>
+    </div>
+    <button id="addDrawingBtn">+</button>
+
+    <script type="module" src="main.js"></script>
+</body>
+</html>

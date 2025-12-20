@@ -1,0 +1,169 @@
+* {
+  box-sizing: border-box;
+}
+
+canvas { display:block; margin:0 auto; background:#eee; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#fridgeCanvas {
+  user-select: none;
+  cursor: default;
+  position: fixed;
+  inset: 0;          /* top:0 right:0 bottom:0 left:0 */
+  display: block;
+}
+
+/* Modal for drawing */
+#drawingModal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 1em;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#drawingCanvas {
+  border: 1px solid white;
+  background-color: white;
+  user-select: none;
+  touch-action: none;
+}
+.modal-toolbar {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.8em;
+}
+
+.modal-top-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 5px;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+}
+
+/* Brush buttons container - distribute buttons evenly */
+#brushButtonsContainer {
+  display: flex;
+  flex: 1;
+  justify-content: space-between; /* spread buttons evenly */
+  gap: 5px;
+}
+
+/* Individual tool buttons */
+.tool-btn {
+  flex: 1; /* scale to fill container */
+  height: 40px;
+  border: 1px solid #aaa;
+  background-color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0; /* hide text, add icons later */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+/* Highlight active tool */
+.tool-btn.active {
+  border-color: #333;
+  background-color: #ddd;
+  transform: scale(1.1);
+}
+
+/* Optional hover effect */
+.tool-btn:hover {
+  border-color: #555;
+}
+
+#brushSizeContainer {
+  display: flex;
+  flex-direction: column; /* vertical layout */
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+#brushSizeSlider {
+  position: relative;
+  width: 60px;  /* shorter width */
+  height: 8px;  /* track thickness */
+  background: #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+#brushSizeDot {
+  position: absolute;
+  top: 50%;
+  left: 0%;
+  transform: translate(-50%, -50%);
+  background: #000;
+  border-radius: 50%;
+  width: 16px;   /* initial dot size */
+  height: 16px;
+}
+
+#colorPalette {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.color-swatch {
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  outline: none;
+}
+
+.color-swatch.active {
+  outline: 2px solid white;
+  outline-offset: 2px;
+}
+
+#doneButton {
+    margin-top: 10px;
+    padding: 5px 10px;
+    font-size: 16px;
+}
+
+#addDrawingBtn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  background-color: #007aff;
+  color: white;
+  font-size: 32px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  z-index: 1000;
+}
+#addDrawingBtn:hover {
+  background-color: #005fcc;
+}
