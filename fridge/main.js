@@ -93,6 +93,18 @@ helpBtn.addEventListener("click", () => {
   welcomeOverlay.style.display = "flex"; // assumes you already have a welcomeScreen element
 });
 
+let needsRedraw = false;
+
+function animate() {
+  if (needsRedraw) {
+    drawFridgeFast();
+    needsRedraw = false;
+  }
+  requestAnimationFrame(animate);
+}
+animate();
+
+
 // Initialize if empty
 function createNewDrawing() {
   const newDrawingRef = push(drawingsRef);
@@ -315,9 +327,25 @@ function drawFridge() {
   for (let drawingId in drawings) {
     const d = drawings[drawingId];
 
+    // --- Shadow ---
+    if (dragging && draggedDrawingId === drawingId) {
+      ctx.shadowColor = "rgba(0,0,0,0.5)";
+      ctx.shadowBlur = 20;
+      ctx.shadowOffsetX = 5;
+      ctx.shadowOffsetY = 5;
+    } else {
+      ctx.shadowColor = "rgba(0,0,0,0.3)";
+      ctx.shadowBlur = 10;
+      ctx.shadowOffsetX = 3;
+      ctx.shadowOffsetY = 3;
+    }
+
     // Draw background
     ctx.fillStyle = d.color;
     ctx.fillRect(d.x, d.y, d.width, d.height);
+
+    // Reset shadow for strokes
+    ctx.shadowColor = "transparent";
 
     // Clip to drawing rectangle
     ctx.save();
@@ -331,7 +359,6 @@ function drawFridge() {
     ctx.restore();
   }
 }
-
 
 // --- Draw all strokes on fridge canvas ---
 function drawAllStrokes(d, ctxToUse = ctx) {
@@ -754,14 +781,14 @@ canvas.addEventListener("mousemove", e => {
             x: worldX - draggedDrawing.width / 2,
             y: worldY - draggedDrawing.height / 2
         });
-        drawFridge();
+        needsRedraw = true;
         return;
     }
 
     if (isPanning) {
         camera.x = screenX - panStart.x;
         camera.y = screenY - panStart.y;
-        drawFridge();
+        needsRedraw = true;
         return;
     }
 
