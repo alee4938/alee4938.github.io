@@ -56,6 +56,9 @@ const drawingCtx = drawingCanvas.getContext("2d");
 const doneButton = document.getElementById("doneButton");
 const colorPicker = document.getElementById("colorPicker");
 
+let draggedDrawingId = null;
+let draggedDrawing = null;
+
 const toolState = {
   color: "#000000",
   brushSize: 2,
@@ -167,6 +170,19 @@ function isOverDrawing(screenX, screenY) {
     y >= drawing.y &&
     y <= drawing.y + drawing.height
   );
+}
+
+function getDrawingAt(screenX, screenY) {
+    const { x, y } = screenToWorld(screenX, screenY);
+
+    for (let id in drawings) {
+        const d = drawings[id];
+        if (x >= d.x && x <= d.x + d.width &&
+            y >= d.y && y <= d.y + d.height) {
+            return { id, drawing: d };
+        }
+    }
+    return null;
 }
 
 function updateCursor(e) {
@@ -379,44 +395,43 @@ function resizeDrawingModal() {
 }
 
 function openDrawingModal(drawingId) {
-    drawing = drawings[drawingId];
-    drawingModal.style.display = "flex";
-    drawingIdOpen = drawingId;
-    isModalDrawing = true;
-    currentStroke = [];
+  drawing = drawings[drawingId];
+  drawingModal.style.display = "flex";
+  drawingIdOpen = drawingId;
+  isModalDrawing = true;
+  currentStroke = [];
 
-    toolState.tool = "circle";
-    toolState.translucent = false;
-    updateBrushUI();
+  toolState.tool = "circle";
+  toolState.translucent = false;
+  updateBrushUI();
 
-    const scale = resizeDrawingModal();
+  const scale = resizeDrawingModal();
 
-    drawingCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+  drawingCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
 
-    if (drawing.strokes) {
-        // Scale stored coordinates → modal canvas
-        const scaleX = drawingCanvas.width / drawing.width;
-        const scaleY = drawingCanvas.height / drawing.height;
+  if (drawing.strokes) {
+    for (let strokeId in drawing.strokes) {
+      const rawPoints = drawing.strokes[strokeId];
 
-        for (let strokeId in drawing.strokes) {
-            const scaledPoints = drawing.strokes[strokeId].map(p => ({
-            x: p.x * scaleX,
-            y: p.y * scaleY,
-            radius: p.radius * scaleX,
-            color: p.tool === "eraser" ? "#ffffff" : p.color
-            }));
+      // SCALE points to modal canvas
+      const scaleX = drawingCanvas.width / drawing.width;
+      const scaleY = drawingCanvas.height / drawing.height;
 
-            drawStrokePoints(
-            scaledPoints,
-            drawingCtx,
-            {
-                translucent: drawing.strokes[strokeId][0].translucent === true,
-                opacity: 0.3
-            }
-            );
-        }
+      const scaledPoints = rawPoints.map(p => ({
+        x: p.x * scaleX,
+        y: p.y * scaleY,
+        radius: p.radius * scaleX, // scale radius
+        color: p.tool === "eraser" ? "#ffffff" : p.color,
+        tool: p.tool,
+        translucent: p.translucent
+      }));
+
+      // Replace with scaled points in local cache
+      drawing.strokes[strokeId] = scaledPoints;
     }
-    redrawModalCanvas();
+  }
+
+  redrawModalCanvas();
 }
 
 function closeDrawingModal() {
@@ -455,31 +470,27 @@ function closeDrawingModal() {
 let lastPoint = null;
 
 drawingCanvas.addEventListener("mousedown", e => {
-    if (!isModalDrawing) return;
+  if (!isModalDrawing) return;
 
-    const rect = drawingCanvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+  const rect = drawingCanvas.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
 
-    currentStroke.push({
-    x,
-    y,
+  // Start new stroke
+  currentStroke = [{
+    x, y,
     color: toolState.tool === "eraser" ? "#ffffff" : toolState.color,
     radius: toolState.brushSize,
     tool: toolState.tool,
     translucent: toolState.translucent
-    });
-    
-    // Start new stroke: reset lastPoint
-    lastPoint = { x, y };
-    redrawModalCanvas();
+  }];
+
+  lastPoint = { x, y };
+  redrawModalCanvas();
 });
 
 drawingCanvas.addEventListener("mouseup", e => {
   if (!isModalDrawing || !currentStroke.length) return;
-
-  const strokesRef = ref(db, `fridge/${drawingIdOpen}/strokes`);
-  const newStrokeRef = push(strokesRef);
 
   const scaleX = drawing.width / drawingCanvas.width;
   const scaleY = drawing.height / drawingCanvas.height;
@@ -488,99 +499,76 @@ drawingCanvas.addEventListener("mouseup", e => {
     x: p.x * scaleX,
     y: p.y * scaleY,
     radius: p.radius * scaleX,
-    color: p.color ?? "#000000",
-    tool: p.tool ?? "circle",
-    translucent: p.translucent ?? false
+    color: p.color,
+    tool: p.tool,
+    translucent: p.translucent
   }));
 
+  // Push to Firebase
+  const strokesRef = ref(db, `fridge/${drawingIdOpen}/strokes`);
+  const newStrokeRef = push(strokesRef);
   set(newStrokeRef, scaledStroke);
 
+  // Add to local drawing
+  if (!drawing.strokes) drawing.strokes = {};
+  drawing.strokes[newStrokeRef.key] = [...currentStroke];
+
+  // Clear current stroke
   currentStroke = [];
   lastPoint = null;
+
+  redrawModalCanvas();
 });
 
 function redrawModalCanvas() {
   drawingCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
 
-  if (!drawing.strokes) return;
-
-  const scaleX = drawingCanvas.width / drawing.width;
-  const scaleY = drawingCanvas.height / drawing.height;
+  if (!drawing.strokes) drawing.strokes = {};
 
   for (let strokeId in drawing.strokes) {
-    const rawPoints = drawing.strokes[strokeId];
-
-    const scaledPoints = rawPoints.map(p => ({
-      x: p.x * scaleX,
-      y: p.y * scaleY,
-      radius: p.radius * scaleX,
-      color: p.tool === "eraser" ? "#ffffff" : p.color,
-      translucent: p.translucent ?? false
-    }));
-
-    drawStrokePoints(
-      scaledPoints,
-      drawingCtx,
-      {
-        translucent: scaledPoints.some(p => p.translucent), // stroke translucent if any point is
-        opacity: 0.3
-      }
-    );
+    drawStrokePoints(drawing.strokes[strokeId], drawingCtx, {
+      translucent: drawing.strokes[strokeId].some(p => p.translucent),
+      opacity: 0.3
+    });
   }
 
-  // Draw current stroke on top
   if (currentStroke.length) {
-    const scaledCurrent = currentStroke.map(p => ({
-      ...p,
-      x: p.x,
-      y: p.y,
-      radius: p.radius
-    }));
-
-    drawStrokePoints(
-      scaledCurrent,
-      drawingCtx,
-      {
-        translucent: scaledCurrent.some(p => p.translucent),
-        opacity: 0.3
-      }
-    );
+    drawStrokePoints(currentStroke, drawingCtx, {
+      translucent: currentStroke.some(p => p.translucent),
+      opacity: 0.3
+    });
   }
 }
 
+
 // --- Modal mouse events scaled ---
 drawingCanvas.addEventListener("mousemove", e => {
-    if (!isModalDrawing || e.buttons !== 1) return;
+  if (!isModalDrawing || e.buttons !== 1 || !lastPoint) return;
 
-    const rect = drawingCanvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+  const rect = drawingCanvas.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
 
-    if (lastPoint) {
-        const dx = x - lastPoint.x;
-        const dy = y - lastPoint.y;
-        const distance = Math.sqrt(dx*dx + dy*dy);
+  const dx = x - lastPoint.x;
+  const dy = y - lastPoint.y;
+  const distance = Math.sqrt(dx * dx + dy * dy);
 
-        // Interpolate points between lastPoint and current mouse
-        for (let i = 0; i < distance; i++) {
-            const px = lastPoint.x + dx * (i / distance);
-            const py = lastPoint.y + dy * (i / distance);
+  for (let i = 0; i < distance; i++) {
+    const px = lastPoint.x + dx * (i / distance);
+    const py = lastPoint.y + dy * (i / distance);
 
-            const point = {
-                x: px,
-                y: py,
-                color: toolState.tool === "eraser" ? "#ffffff" : toolState.color,
-                radius: toolState.brushSize,
-                tool: toolState.tool,
-                translucent: toolState.translucent
-            };
+    currentStroke.push({
+      x: px,
+      y: py,
+      color: toolState.tool === "eraser" ? "#ffffff" : toolState.color,
+      radius: toolState.brushSize,
+      tool: toolState.tool,
+      translucent: toolState.translucent
+    });
+  }
 
-            currentStroke.push(point);
-        }
-    }
-
-    lastPoint = { x, y };
-    redrawModalCanvas();
+  lastPoint = { x, y };
+  redrawModalCanvas();
 });
 
 doneButton.addEventListener("click", closeDrawingModal);
@@ -715,80 +703,79 @@ brushSizeSlider.addEventListener("input", e => {
 
 // --- Fridge canvas dragging ---
 canvas.addEventListener("mousedown", e => {
-  if (isModalDrawing) return;
+    if (isModalDrawing) return;
 
-  const rect = canvas.getBoundingClientRect();
-  const screenX = e.clientX - rect.left;
-  const screenY = e.clientY - rect.top;
+    const rect = canvas.getBoundingClientRect();
+    const screenX = e.clientX - rect.left;
+    const screenY = e.clientY - rect.top;
 
-  const { x: worldX, y: worldY } = screenToWorld(screenX, screenY);
+    const { x: worldX, y: worldY } = screenToWorld(screenX, screenY);
 
-  if (
-    worldX >= drawing.x &&
-    worldX <= drawing.x + drawing.width &&
-    worldY >= drawing.y &&
-    worldY <= drawing.y + drawing.height &&
-    (!drawing.lockedBy || drawing.lockedBy === userId)
-  ) {
-    dragging = true;
-    isPanning = false;
+    const hit = getDrawingAt(screenX, screenY);
+    if (hit) {
+        dragging = true;
+        isPanning = false;
+        canvas.style.cursor = "grabbing";
 
-    canvas.style.cursor = "grabbing";
+        draggedDrawingId = hit.id;
+        draggedDrawing = hit.drawing;
 
-    update(drawingRef, { lockedBy: userId });
-    drawFridge();
-    onDisconnect(drawingRef).update({
-        lockedBy: null
-    });
-    return;
-  }
+        const currentDrawingRef = ref(db, `fridge/${draggedDrawingId}`);
+        update(currentDrawingRef, { lockedBy: userId });
+        drawFridge();
+        onDisconnect(currentDrawingRef).update({ lockedBy: null });
+    
+        return;
+    }
 
-  isPanning = true;
-  dragging = false;
+    isPanning = true;
+    dragging = false;
 
-  panStart.x = screenX - camera.x;
-  panStart.y = screenY - camera.y;
+    panStart.x = screenX - camera.x;
+    panStart.y = screenY - camera.y;
 
-  canvas.style.cursor = "move";
+    canvas.style.cursor = "move";
 });
 
 
 canvas.addEventListener("mousemove", e => {
-  const rect = canvas.getBoundingClientRect();
-  const screenX = e.clientX - rect.left;
-  const screenY = e.clientY - rect.top;
+    const rect = canvas.getBoundingClientRect();
+    const screenX = e.clientX - rect.left;
+    const screenY = e.clientY - rect.top;
 
-  if (dragging) {
-    const { x: worldX, y: worldY } = screenToWorld(screenX, screenY);
+    if (dragging) {
+        const { x: worldX, y: worldY } = screenToWorld(screenX, screenY);
+        const currentDrawingRef = ref(db, `fridge/${draggedDrawingId}`);
+        update(currentDrawingRef, {
+            x: worldX - draggedDrawing.width / 2,
+            y: worldY - draggedDrawing.height / 2
+        });
+        drawFridge();
+        return;
+    }
 
-    update(drawingRef, {
-      x: worldX - drawing.width / 2,
-      y: worldY - drawing.height / 2
-    });
+    if (isPanning) {
+        camera.x = screenX - panStart.x;
+        camera.y = screenY - panStart.y;
+        drawFridge();
+        return;
+    }
 
-    drawFridge();
-    return;
-  }
-
-  if (isPanning) {
-    camera.x = screenX - panStart.x;
-    camera.y = screenY - panStart.y;
-    drawFridge();
-    return;
-  }
-
-  // Hover feedback
-  if (isOverDrawing(screenX, screenY)) {
-    canvas.style.cursor = "grab";
-  } else {
-    canvas.style.cursor = "default";
-  }
+    // Hover feedback
+    if (isOverDrawing(screenX, screenY)) {
+        canvas.style.cursor = "grab";
+    } else {
+        canvas.style.cursor = "default";
+    }
 });
 
 canvas.addEventListener("mouseup", () => {
   if (dragging) {
     dragging = false;
-    update(drawingRef, { lockedBy: null });
+    const currentDrawingRef = ref(db, `fridge/${draggedDrawingId}`);
+    update(currentDrawingRef, { lockedBy: null });
+    draggedDrawingId = null;
+    draggedDrawing = null;
     drawFridge();
   }
 
@@ -804,26 +791,22 @@ canvas.addEventListener("mouseleave", () => {
 
 // --- Double click opens modal ---
 canvas.addEventListener("dblclick", e => {
-  const rect = canvas.getBoundingClientRect();
-  const screenX = e.clientX - rect.left;
-  const screenY = e.clientY - rect.top;
+    const rect = canvas.getBoundingClientRect();
+    const screenX = e.clientX - rect.left;
+    const screenY = e.clientY - rect.top;
 
-  const { x: worldX, y: worldY } = screenToWorld(screenX, screenY);
-
-  if (
-    worldX >= drawing.x &&
-    worldX <= drawing.x + drawing.width &&
-    worldY >= drawing.y &&
-    worldY <= drawing.y + drawing.height &&
-    (!drawing.lockedBy || drawing.lockedBy === userId)
-  ) {
-    update(drawingRef, { lockedBy: userId });
-    drawFridge();
-    onDisconnect(drawingRef).update({
-        lockedBy: null
-    });
-    openDrawingModal(drawingIdOpen);
-  }
+    const hit = getDrawingAt(screenX, screenY);
+    if (hit) {
+        drawingIdOpen = hit.id;
+        draggedDrawing = hit.drawing;
+        if((!draggedDrawing.lockedBy || draggedDrawing.lockedBy === userId)){
+            const currentDrawingRef = ref(db, `fridge/${drawingIdOpen}`);
+            update(currentDrawingRef, { lockedBy: userId });
+            drawFridge();
+            onDisconnect(currentDrawingRef).update({ lockedBy: null });
+            openDrawingModal(drawingIdOpen);
+        }
+    }
 });
 
 
