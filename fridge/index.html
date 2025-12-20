@@ -10,30 +10,44 @@
 <body>
     <canvas id="fridgeCanvas"></canvas>
 
+    <div id="welcomeOverlay">
+        <div id="welcomeImageWrapper">
+            <img id="welcomeImage" src="welcome.png">
+            <img id="welcomeClose" src="welcome_close.png">
+        </div>
+    </div>
+
     <!-- Modal for drawing -->
     <div id="drawingModal">
         <div id="drawingContainer">
             <div id="brushToolbar" class="modal-top-toolbar">
                 <div id="brushButtonsContainer">
-                    <button class="tool-btn" data-tool="circle">Circle Brush</button>
-                    <button class="tool-btn" data-tool="translucent">Translucent Brush</button>
-                    <button class="tool-btn" data-tool="eraser">Eraser</button>
-                    <button class="tool-btn" data-tool="undo">Undo</button>
-                    <button class="tool-btn" data-tool="redo">Redo</button>
+                    <button class="tool-btn" data-tool="circle">
+                        <img src="brush_icon.png" alt="Brush">
+                    </button>
+
+                    <button class="tool-btn" data-tool="translucent">
+                        <img src="translucent_icon.png" alt="Translucent Brush">
+                    </button>
+
+                    <button class="tool-btn" data-tool="eraser">
+                        <img src="eraser_icon.png" alt="Eraser">
+                    </button>
                 </div>
                 <div id="brushSizeContainer">
-                    <div id="brushSizeSlider">
-                        <div id="brushSizeDot"></div>
-                    </div>
+                    <div id="brushSizeSlider"></div>
+                    <div id="brushSizeSliderBall"></div>
+                    <div id="brushSizeDot"></div>
                 </div>
             </div>
             <canvas id="drawingCanvas" width="400" height="400"></canvas>
-            <button id="doneButton">✔ Done</button>
             <div class="modal-toolbar">
                 <div id="colorPalette"></div>
+                <img id="doneButton" src="done.png" alt="Done" class="done-btn">
             </div>
         </div>
     </div>
+    <button id="helpBtn">?</button>
     <button id="addDrawingBtn">+</button>
 
     <script type="module" src="main.js"></script>

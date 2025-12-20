@@ -80,6 +80,19 @@ const PALETTE_BASE = {
 
 const drawingsRef = ref(db, "fridge");
 
+const welcomeOverlay = document.getElementById("welcomeOverlay");
+const welcomeClose = document.getElementById("welcomeClose");
+
+welcomeClose.addEventListener("click", () => {
+  welcomeOverlay.style.display = "none";
+});
+
+const helpBtn = document.getElementById("helpBtn");
+
+helpBtn.addEventListener("click", () => {
+  welcomeOverlay.style.display = "flex"; // assumes you already have a welcomeScreen element
+});
+
 // Initialize if empty
 function createNewDrawing() {
   const newDrawingRef = push(drawingsRef);
@@ -123,10 +136,6 @@ let isPanning = false;
 let panStart = { x: 0, y: 0 };
 
 canvas.addEventListener("mouseup", () => {
-  isPanning = false;
-});
-
-canvas.addEventListener("mouseleave", () => {
   isPanning = false;
 });
 
@@ -387,7 +396,7 @@ function resizeDrawingModal() {
     drawingContainer.style.fontSize =
         `${Math.max(12, scale * 3)}px`;
 
-    brushSizeSlider.style.width = Math.floor(100 * scale) + "px";
+    brushSizeSlider.style.width = Math.floor(55 * scale) + "px";
     
     resizePalette(scale);
 
@@ -520,6 +529,10 @@ drawingCanvas.addEventListener("mouseup", e => {
   redrawModalCanvas();
 });
 
+drawingCanvas.addEventListener("mouseleave", e => {
+  lastPoint = null;
+});
+
 function redrawModalCanvas() {
   drawingCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
 
@@ -620,19 +633,10 @@ toolButtons.forEach(btn => {
         toolState.tool = "eraser";
         toolState.translucent = false;
         break;
-      case "undo":
-        undoLastStroke();
-        break;
-      case "redo":
-        redoStroke();
-        break;
     }
 
-    // Highlight active brush buttons only (not undo/redo)
     toolButtons.forEach(b => b.classList.remove("active"));
-    if (selectedTool !== "undo" && selectedTool !== "redo") {
-      btn.classList.add("active");
-    }
+    btn.classList.add("active");
   });
 });
 

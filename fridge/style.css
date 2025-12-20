@@ -12,6 +12,34 @@ html, body {
   overflow: hidden;
 }
 
+#welcomeOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+#welcomeImageWrapper {
+  position: relative;
+}
+
+#welcomeImage {
+  max-width: 60vw;
+  max-height: 60vh;
+}
+
+#welcomeClose {
+  position: absolute;
+  bottom: 4vh;
+  right: 4vw;
+  height: 7vh;
+  width: auto;
+  cursor: pointer;
+}
+
 #fridgeCanvas {
   user-select: none;
   cursor: default;
@@ -49,12 +77,12 @@ html, body {
 .modal-toolbar {
   display: flex;
   justify-content: center;
-  margin-bottom: 0.8em;
+  margin-top: 0.8em;
 }
 
 .modal-top-toolbar {
   display: flex;
-  justify-content: space-between;
+  flex-direction: row;
   align-items: center;
   width: 100%;
   padding: 5px;
@@ -62,56 +90,74 @@ html, body {
   box-sizing: border-box;
 }
 
-/* Brush buttons container - distribute buttons evenly */
 #brushButtonsContainer {
   display: flex;
-  flex: 1;
-  justify-content: space-between; /* spread buttons evenly */
-  gap: 5px;
+  gap: 10px;
+  width: 100%;
+  padding-left: 20px;
+  padding-right: 10px;
 }
 
-/* Individual tool buttons */
 .tool-btn {
-  flex: 1; /* scale to fill container */
-  height: 40px;
-  border: 1px solid #aaa;
-  background-color: #fff;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0; /* hide text, add icons later */
+  flex: 1;
+  aspect-ratio: 1 / 1;
+  background: #eee;
+  border: 2px solid transparent;
+  border-radius: 25%;
+  padding: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s;
+  cursor: pointer;
 }
 
-/* Highlight active tool */
+.tool-btn img {
+  width: 70%;
+  height: 70%;
+  object-fit: contain;
+  pointer-events: none; /* important so clicks hit button */
+}
+
+/* Active tool highlight */
 .tool-btn.active {
-  border-color: #333;
-  background-color: #ddd;
-  transform: scale(1.1);
+  background: #ffffff;
+  border-color: #007aff;
 }
 
-/* Optional hover effect */
+/* Optional hover feedback */
 .tool-btn:hover {
-  border-color: #555;
+  background: #f5f5f5;
 }
 
 #brushSizeContainer {
+    width: 50%;
+  margin-left: 60px;
+  margin-right: 50px;
+  height: 106px;  /* track thickness */
+  position: relative;
+  overflow: visible;
   display: flex;
   flex-direction: column; /* vertical layout */
   align-items: center;
-  margin-bottom: 16px;
 }
 
 #brushSizeSlider {
   position: relative;
-  width: 60px;  /* shorter width */
-  height: 8px;  /* track thickness */
+  width: 100%;
+  height: 106px;            /* 🔑 REQUIRED */
   background: #ccc;
-  border-radius: 4px;
+  clip-path: polygon(0% 47%, 100% 0%, 100% 100%, 0% 53%);
   cursor: pointer;
-  margin-top: 8px;
+}
+
+#brushSizeSliderBall {
+  position: absolute;
+  width: 105px;
+  height: 105px;            /* 🔑 REQUIRED */
+  top: 1%;
+  left: 87%;
+  background: #ccc;
+  border-radius: 50%;
 }
 
 #brushSizeDot {
@@ -143,27 +189,55 @@ html, body {
   outline-offset: 2px;
 }
 
-#doneButton {
-    margin-top: 10px;
-    padding: 5px 10px;
-    font-size: 16px;
+.done-btn {
+  cursor: pointer;
+  vertical-align: middle; /* align with color picker */
+  height: 48px;
+  margin-left: 16px;       /* spacing between color picker and button */
+}
+
+#helpBtn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #3da4ff; /* blue */
+  color: white;
+  border: 4px solid white;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  z-index: 1000;
+}
+
+#helpBtn:hover {
+  background-color: white;
+  color: #3da4ff;
+  border-color: #3da4ff;
 }
 
 #addDrawingBtn {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  width: 50px;
-  height: 50px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
-  border: none;
-  background-color: #007aff;
+  background-color: #dc7d3d;
   color: white;
-  font-size: 32px;
+  border-color: white;
+  border-width: 6px;
+  font-size: 64px;
   cursor: pointer;
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
   z-index: 1000;
+  border-style: solid;
 }
+
 #addDrawingBtn:hover {
-  background-color: #005fcc;
+  background-color: white;
+  color: #dc7d3d;
+  border-color: #dc7d3d;
 }
